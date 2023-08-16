@@ -26,45 +26,13 @@ class NativeImpl implements Native {
   factory NativeImpl.wasm(FutureOr<WasmModule> module) =>
       NativeImpl(module as ExternalLibrary);
   NativeImpl.raw(this._platform);
-  Future<void> initLogger({dynamic hint}) {
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_init_logger(port_),
-      parseSuccessData: _wire2api_unit,
-      constMeta: kInitLoggerConstMeta,
-      argValues: [],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kInitLoggerConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "init_logger",
-        argNames: [],
-      );
-
-  Future<void> setBpm({required int bpm, dynamic hint}) {
+  Future<void> play({required int bpm, dynamic hint}) {
     var arg0 = api2wire_u32(bpm);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_set_bpm(port_, arg0),
-      parseSuccessData: _wire2api_unit,
-      constMeta: kSetBpmConstMeta,
-      argValues: [bpm],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kSetBpmConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "set_bpm",
-        argNames: ["bpm"],
-      );
-
-  Future<void> play({dynamic hint}) {
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_play(port_),
+      callFfi: (port_) => _platform.inner.wire_play(port_, arg0),
       parseSuccessData: _wire2api_unit,
       constMeta: kPlayConstMeta,
-      argValues: [],
+      argValues: [bpm],
       hint: hint,
     ));
   }
@@ -72,7 +40,7 @@ class NativeImpl implements Native {
   FlutterRustBridgeTaskConstMeta get kPlayConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "play",
-        argNames: [],
+        argNames: ["bpm"],
       );
 
   Future<void> stop({dynamic hint}) {
@@ -91,35 +59,19 @@ class NativeImpl implements Native {
         argNames: [],
       );
 
-  Future<Platform> platform({dynamic hint}) {
+  Future<void> initLogger({dynamic hint}) {
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_platform(port_),
-      parseSuccessData: _wire2api_platform,
-      constMeta: kPlatformConstMeta,
+      callFfi: (port_) => _platform.inner.wire_init_logger(port_),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kInitLoggerConstMeta,
       argValues: [],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kPlatformConstMeta =>
+  FlutterRustBridgeTaskConstMeta get kInitLoggerConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
-        debugName: "platform",
-        argNames: [],
-      );
-
-  Future<bool> rustReleaseMode({dynamic hint}) {
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_rust_release_mode(port_),
-      parseSuccessData: _wire2api_bool,
-      constMeta: kRustReleaseModeConstMeta,
-      argValues: [],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kRustReleaseModeConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "rust_release_mode",
+        debugName: "init_logger",
         argNames: [],
       );
 
@@ -127,18 +79,6 @@ class NativeImpl implements Native {
     _platform.dispose();
   }
 // Section: wire2api
-
-  bool _wire2api_bool(dynamic raw) {
-    return raw as bool;
-  }
-
-  int _wire2api_i32(dynamic raw) {
-    return raw as int;
-  }
-
-  Platform _wire2api_platform(dynamic raw) {
-    return Platform.values[raw as int];
-  }
 
   void _wire2api_unit(dynamic raw) {
     return;
@@ -259,47 +199,20 @@ class NativeWire implements FlutterRustBridgeWireBase {
   late final _init_frb_dart_api_dl = _init_frb_dart_api_dlPtr
       .asFunction<int Function(ffi.Pointer<ffi.Void>)>();
 
-  void wire_init_logger(
-    int port_,
-  ) {
-    return _wire_init_logger(
-      port_,
-    );
-  }
-
-  late final _wire_init_loggerPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
-          'wire_init_logger');
-  late final _wire_init_logger =
-      _wire_init_loggerPtr.asFunction<void Function(int)>();
-
-  void wire_set_bpm(
+  void wire_play(
     int port_,
     int bpm,
   ) {
-    return _wire_set_bpm(
+    return _wire_play(
       port_,
       bpm,
     );
   }
 
-  late final _wire_set_bpmPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Uint32)>>(
-          'wire_set_bpm');
-  late final _wire_set_bpm =
-      _wire_set_bpmPtr.asFunction<void Function(int, int)>();
-
-  void wire_play(
-    int port_,
-  ) {
-    return _wire_play(
-      port_,
-    );
-  }
-
   late final _wire_playPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_play');
-  late final _wire_play = _wire_playPtr.asFunction<void Function(int)>();
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Uint32)>>(
+          'wire_play');
+  late final _wire_play = _wire_playPtr.asFunction<void Function(int, int)>();
 
   void wire_stop(
     int port_,
@@ -313,33 +226,19 @@ class NativeWire implements FlutterRustBridgeWireBase {
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_stop');
   late final _wire_stop = _wire_stopPtr.asFunction<void Function(int)>();
 
-  void wire_platform(
+  void wire_init_logger(
     int port_,
   ) {
-    return _wire_platform(
+    return _wire_init_logger(
       port_,
     );
   }
 
-  late final _wire_platformPtr =
+  late final _wire_init_loggerPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
-          'wire_platform');
-  late final _wire_platform =
-      _wire_platformPtr.asFunction<void Function(int)>();
-
-  void wire_rust_release_mode(
-    int port_,
-  ) {
-    return _wire_rust_release_mode(
-      port_,
-    );
-  }
-
-  late final _wire_rust_release_modePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
-          'wire_rust_release_mode');
-  late final _wire_rust_release_mode =
-      _wire_rust_release_modePtr.asFunction<void Function(int)>();
+          'wire_init_logger');
+  late final _wire_init_logger =
+      _wire_init_loggerPtr.asFunction<void Function(int)>();
 
   void free_WireSyncReturn(
     WireSyncReturn ptr,

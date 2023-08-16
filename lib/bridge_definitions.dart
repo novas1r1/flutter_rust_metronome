@@ -9,15 +9,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class Native {
-  Future<void> initLogger({dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kInitLoggerConstMeta;
-
-  Future<void> setBpm({required int bpm, dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kSetBpmConstMeta;
-
-  Future<void> play({dynamic hint});
+  Future<void> play({required int bpm, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kPlayConstMeta;
 
@@ -25,22 +17,7 @@ abstract class Native {
 
   FlutterRustBridgeTaskConstMeta get kStopConstMeta;
 
-  Future<Platform> platform({dynamic hint});
+  Future<void> initLogger({dynamic hint});
 
-  FlutterRustBridgeTaskConstMeta get kPlatformConstMeta;
-
-  Future<bool> rustReleaseMode({dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kRustReleaseModeConstMeta;
-}
-
-enum Platform {
-  Unknown,
-  Android,
-  Ios,
-  Windows,
-  Unix,
-  MacIntel,
-  MacApple,
-  Wasm,
+  FlutterRustBridgeTaskConstMeta get kInitLoggerConstMeta;
 }

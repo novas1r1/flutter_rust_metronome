@@ -22,37 +22,17 @@ use std::sync::Arc;
 
 // Section: wire functions
 
-fn wire_init_logger_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, ()>(
-        WrapInfo {
-            debug_name: "init_logger",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || move |task_callback| Ok(init_logger()),
-    )
-}
-fn wire_set_bpm_impl(port_: MessagePort, bpm: impl Wire2Api<u32> + UnwindSafe) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, ()>(
-        WrapInfo {
-            debug_name: "set_bpm",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || {
-            let api_bpm = bpm.wire2api();
-            move |task_callback| Ok(set_bpm(api_bpm))
-        },
-    )
-}
-fn wire_play_impl(port_: MessagePort) {
+fn wire_play_impl(port_: MessagePort, bpm: impl Wire2Api<u32> + UnwindSafe) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, ()>(
         WrapInfo {
             debug_name: "play",
             port: Some(port_),
             mode: FfiCallMode::Normal,
         },
-        move || move |task_callback| Ok(play()),
+        move || {
+            let api_bpm = bpm.wire2api();
+            move |task_callback| Ok(play(api_bpm))
+        },
     )
 }
 fn wire_stop_impl(port_: MessagePort) {
@@ -65,24 +45,14 @@ fn wire_stop_impl(port_: MessagePort) {
         move || move |task_callback| Ok(stop()),
     )
 }
-fn wire_platform_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, Platform>(
+fn wire_init_logger_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, ()>(
         WrapInfo {
-            debug_name: "platform",
+            debug_name: "init_logger",
             port: Some(port_),
             mode: FfiCallMode::Normal,
         },
-        move || move |task_callback| Ok(platform()),
-    )
-}
-fn wire_rust_release_mode_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, bool>(
-        WrapInfo {
-            debug_name: "rust_release_mode",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || move |task_callback| Ok(rust_release_mode()),
+        move || move |task_callback| Ok(init_logger()),
     )
 }
 // Section: wrapper structs
@@ -113,28 +83,6 @@ impl Wire2Api<u32> for u32 {
     }
 }
 // Section: impl IntoDart
-
-impl support::IntoDart for Platform {
-    fn into_dart(self) -> support::DartAbi {
-        match self {
-            Self::Unknown => 0,
-            Self::Android => 1,
-            Self::Ios => 2,
-            Self::Windows => 3,
-            Self::Unix => 4,
-            Self::MacIntel => 5,
-            Self::MacApple => 6,
-            Self::Wasm => 7,
-        }
-        .into_dart()
-    }
-}
-impl support::IntoDartExceptPrimitive for Platform {}
-impl rust2dart::IntoIntoDart<Platform> for Platform {
-    fn into_into_dart(self) -> Self {
-        self
-    }
-}
 
 // Section: executor
 

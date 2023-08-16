@@ -82,8 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               IconButton(
                 onPressed: () async {
-                  await api.setBpm(bpm: 60);
-                  await api.play();
+                  await api.play(bpm: 60);
                 },
                 icon: const Icon(
                   Icons.play_circle_fill,
