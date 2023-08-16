@@ -26,13 +26,29 @@ class NativeImpl implements Native {
   factory NativeImpl.wasm(FutureOr<WasmModule> module) =>
       NativeImpl(module as ExternalLibrary);
   NativeImpl.raw(this._platform);
-  Future<void> play({required int bpm, dynamic hint}) {
+  Future<void> setBpm({required int bpm, dynamic hint}) {
     var arg0 = api2wire_u32(bpm);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_play(port_, arg0),
+      callFfi: (port_) => _platform.inner.wire_set_bpm(port_, arg0),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSetBpmConstMeta,
+      argValues: [bpm],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSetBpmConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "set_bpm",
+        argNames: ["bpm"],
+      );
+
+  Future<void> play({dynamic hint}) {
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_play(port_),
       parseSuccessData: _wire2api_unit,
       constMeta: kPlayConstMeta,
-      argValues: [bpm],
+      argValues: [],
       hint: hint,
     ));
   }
@@ -40,7 +56,7 @@ class NativeImpl implements Native {
   FlutterRustBridgeTaskConstMeta get kPlayConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "play",
-        argNames: ["bpm"],
+        argNames: [],
       );
 
   Future<void> stop({dynamic hint}) {
@@ -199,20 +215,33 @@ class NativeWire implements FlutterRustBridgeWireBase {
   late final _init_frb_dart_api_dl = _init_frb_dart_api_dlPtr
       .asFunction<int Function(ffi.Pointer<ffi.Void>)>();
 
-  void wire_play(
+  void wire_set_bpm(
     int port_,
     int bpm,
   ) {
-    return _wire_play(
+    return _wire_set_bpm(
       port_,
       bpm,
     );
   }
 
-  late final _wire_playPtr =
+  late final _wire_set_bpmPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Uint32)>>(
-          'wire_play');
-  late final _wire_play = _wire_playPtr.asFunction<void Function(int, int)>();
+          'wire_set_bpm');
+  late final _wire_set_bpm =
+      _wire_set_bpmPtr.asFunction<void Function(int, int)>();
+
+  void wire_play(
+    int port_,
+  ) {
+    return _wire_play(
+      port_,
+    );
+  }
+
+  late final _wire_playPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_play');
+  late final _wire_play = _wire_playPtr.asFunction<void Function(int)>();
 
   void wire_stop(
     int port_,

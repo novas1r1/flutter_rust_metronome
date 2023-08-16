@@ -1,9 +1,15 @@
 use crate::metronome::Metronome;
 
-pub fn play(bpm: u32) {
+pub fn set_bpm(bpm: u32) {
+    log::info!("Metronome is set to {} bpm", bpm);
+    let mut metronome = Metronome::new();
+    metronome.set_bpm(bpm);
+}
+
+pub fn play() {
     log::info!("Metronome is playing");
     let mut metronome = Metronome::new();
-    metronome.play(bpm);
+    metronome.play();
 }
 
 pub fn stop() {

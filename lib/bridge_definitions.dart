@@ -9,7 +9,11 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class Native {
-  Future<void> play({required int bpm, dynamic hint});
+  Future<void> setBpm({required int bpm, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSetBpmConstMeta;
+
+  Future<void> play({dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kPlayConstMeta;
 

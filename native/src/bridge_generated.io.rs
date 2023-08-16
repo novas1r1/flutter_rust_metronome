@@ -2,8 +2,13 @@ use super::*;
 // Section: wire functions
 
 #[no_mangle]
-pub extern "C" fn wire_play(port_: i64, bpm: u32) {
-    wire_play_impl(port_, bpm)
+pub extern "C" fn wire_set_bpm(port_: i64, bpm: u32) {
+    wire_set_bpm_impl(port_, bpm)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_play(port_: i64) {
+    wire_play_impl(port_)
 }
 
 #[no_mangle]

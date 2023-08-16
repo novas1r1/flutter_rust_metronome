@@ -19,7 +19,7 @@ impl Metronome {
         self.bpm = bpm;
     }
 
-    pub fn play(&mut self, bpm: u32) {
+    pub fn play(&mut self) {
         self.is_playing.store(true, Ordering::Relaxed);
         let interval = Duration::from_millis(60000 / self.bpm as u64);
 
