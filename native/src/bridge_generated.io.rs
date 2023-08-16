@@ -2,6 +2,26 @@ use super::*;
 // Section: wire functions
 
 #[no_mangle]
+pub extern "C" fn wire_init_logger(port_: i64) {
+    wire_init_logger_impl(port_)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_set_bpm(port_: i64, bpm: u32) {
+    wire_set_bpm_impl(port_, bpm)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_play(port_: i64) {
+    wire_play_impl(port_)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_stop(port_: i64) {
+    wire_stop_impl(port_)
+}
+
+#[no_mangle]
 pub extern "C" fn wire_platform(port_: i64) {
     wire_platform_impl(port_)
 }

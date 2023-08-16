@@ -59,3 +59,100 @@ This template is licensed under either of
 at your option.
 
 The [SPDX](https://spdx.dev/) license identifier for this project is `MIT OR Apache-2.0`.
+
+# CAN YOU FEEL THE PAIN?
+Flutter: 3.10.x
+java 18.0.1.1 2022-04-22
+Java(TM) SE Runtime Environment (build 18.0.1.1+2-6)
+Java HotSpot(TM) 64-Bit Server VM (build 18.0.1.1+2-6, mixed mode, sharing)
+
+
+- installed rust for windows 64
+- git clone flutter_bridge with_flutter example
+- tried running it on the emulator
+---
+Launching lib\main.dart on sdk gphone64 x86 64 in debug mode...
+main.dart:1
+Upgrading build.gradle
+Conflict detected between Android Studio Java version and Gradle version, upgrading Gradle version from 6.7 to 7.6.1.
+Upgrading gradle-wrapper.properties
+---
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:processDebugMainManifest'.
+> Unable to make field private final java.lang.String java.io.File.path accessible: module java.base does not "opens java.io" to unnamed module @1beef67a
+---
+
+- installed NDK (side by side) 25.2.9519653
+- is installed under C:\Anwendungen\AndroidSDK\ndk\25.2.9519653
+- updated C:\Users\info\.gradle - there is no gradle.properties
+- updated android/gradle/gradle.properties in project
+---
+org.gradle.jvmargs=-Xmx1536M
+android.useAndroidX=true
+android.enableJetifier=true
+ANDROID_NDK=C:\Anwendungen\AndroidSDK\\ndk\25.2.9519653
+---
+- run cargo install cargo-ndk
+- run cargo ndk -o ../android/app/src/main/jniLibs build -  Failed loading manifest: Das System kann die angegebene Datei nicht finden. (os error 2)
+- PS C:\Development\rust\flutter_rust_bridge\frb_example\with_flutter> cargo ndk -o .\android\app\src\main\jniLibs build 
+[2023-08-16T06:37:04Z INFO  cargo_ndk::cli] Using NDK at path: C:\Anwendungen\AndroidSDK\ndk\25.2.9519653 (ANDROID_HOME)-
+
+There is no jniLibs folder? Where does it come from?
+
+Launching lib\main.dart on sdk gphone64 x86 64 in debug mode...
+main.dart:1
+Warning: Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.android.com/repository/android/common/01
+Warning: Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/android/generic/01
+Warning: Mapping new ns http://schemas.android.com/sdk/android/repo/addon2/02 to old ns http://schemas.android.com/sdk/android/repo/addon2/01
+Warning: Mapping new ns http://schemas.android.com/sdk/android/repo/addon2/03 to old ns http://schemas.android.com/sdk/android/repo/addon2/01
+Warning: Mapping new ns http://schemas.android.com/sdk/android/repo/repository2/02 to old ns http://schemas.android.com/sdk/android/repo/repository2/01
+Warning: Mapping new ns http://schemas.android.com/sdk/android/repo/repository2/03 to old ns http://schemas.android.com/sdk/android/repo/repository2/01
+Warning: Mapping new ns http://schemas.android.com/sdk/android/repo/sys-img2/03 to old ns http://schemas.android.com/sdk/android/repo/sys-img2/01
+Warning: Mapping new ns http://schemas.android.com/sdk/android/repo/sys-img2/02 to old ns http://schemas.android.com/sdk/android/repo/sys-img2/01
+Warning: unerwartetes Element (URI:"", lokal:"base-extension"). Erwartete Elemente sind <{}codename>,<{}layoutlib>,<{}api-level>
+
+CHANGED TO TEMPLATE
+- did run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+- success, then tried flutter run:
+---
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file 'C:\Development\rust\flutter_rust_metronome\android\app\build.gradle' line: 87
+
+* What went wrong:
+A problem occurred evaluating project ':app'.
+> Could not create task ':app:cargoBuildDebug'.
+   > Could not get unknown property 'ANDROID_NDK' for task ':app:cargoBuildDebug' of type org.gradle.api.tasks.Exec.
+---
+- added ANDROID_NDK=C:\Anwendungen\AndroidSDK\ndk to gradle.properties
+- tried running flutter run again
+---
+[2023-08-16T07:10:57Z INFO  cargo_ndk::cli] Using NDK at path: C:AnwendungenAndroidSDK
+    dk (ANDROID_NDK_HOME)
+thread 'main' panicked at 'could not resolve NDK version: Os { code: 123, kind: InvalidFilename, message: "Die Syntax für den Dateinamen, Verzeichnisnamen oder die Datenträgerbezeichnung ist falsch." }', C:\Users\info\.cargo\registry\src\index.crates.io-6f17d22bba15001f\cargo-ndk-3.2.2\src\cli.rs:281:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---
+- tried changing it to: C:\Anwendungen\AndroidSDK\ndk\25.2.9519653
+---
+Launching lib\main.dart on sdk gphone64 x86 64 in debug mode...
+main.dart:1
+[2023-08-16T07:12:07Z INFO  cargo_ndk::cli] Using NDK at path: C:AnwendungenAndroidSDK
+    dk25.2.9519653 (ANDROID_NDK_HOME)
+thread 'main' panicked at 'could not resolve NDK version: Os { code: 123, kind: InvalidFilename, message: "Die Syntax für den Dateinamen, Verzeichnisnamen oder die Datenträgerbezeichnung ist falsch." }', C:\Users\info\.cargo\registry\src\index.crates.io-6f17d22bba15001f\cargo-ndk-3.2.2\src\cli.rs:281:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+FAILURE: Build failed with an exception.
+---
+- changed it to: ANDROID_NDK=C:/Anwendungen/AndroidSDK/ndk/25.2.9519653
+- IT WORKS
+
+- added LLVM (windows) 
+- C:\Program Files\LLVM
+
+bookmark:
+https://github.com/erikas-taroza/simple_audio.git
+https://github.com/fzyzcjy/flutter_rust_bridge/issues/1058
+https://github.com/fzyzcjy/flutter_rust_bridge/issues/1271

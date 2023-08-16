@@ -1,3 +1,29 @@
+use crate::metronome::Metronome;
+
+pub fn init_logger() {
+    android_logger::init_once(android_logger::Config::default().with_min_level(log::Level::Trace));
+    log::info!("This will be visible in Logcat with the tag 'Rust'");
+}
+
+pub fn set_bpm(bpm: u32) {
+    let mut metronome = Metronome::new();
+    metronome.set_bpm(bpm);
+    log::info!("Metronome bpm is set to {}", bpm)
+}
+
+pub fn play() {
+    let mut metronome = Metronome::new();
+    metronome.play();
+    log::info!("Metronome is playing")
+}
+
+pub fn stop() {
+    let mut metronome = Metronome::new();
+    metronome.stop();
+    log::info!("Metronome is stopped")
+}
+
+
 // This is the entry point of your Rust library.
 // When adding new code to your project, note that only items used
 // here will be transformed to their Dart equivalents.
@@ -57,3 +83,4 @@ pub fn platform() -> Platform {
 pub fn rust_release_mode() -> bool {
     cfg!(not(debug_assertions))
 }
+
