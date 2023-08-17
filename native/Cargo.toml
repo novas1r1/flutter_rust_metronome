@@ -9,7 +9,7 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-android_logger = "0.8"
+android_logger = "0.13"
 log = "0.4"
 anyhow = "1"
 flutter_rust_bridge = "1"
