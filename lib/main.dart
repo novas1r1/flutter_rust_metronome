@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     api.initLogger();
+    api.create();
   }
 
   @override
